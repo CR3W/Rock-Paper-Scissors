@@ -1,10 +1,14 @@
 Repository for SJSU CS 151 Rock Paper Scissors
 assignment.
 
+=====================================================
 Changes: 4/1/2012
 -Moved custom exceptions into an Exceptions package
 -Moved ThrowGenerator classes and interface into a ThrowGenerator package
 -Removed the term "Throw" from all of the ThowConverter methods
 -Updated all javadocs and documentation.
+
+Note: To view javadocs, extract the zip anywhere on your computer and open "index.html"
+=====================================================
 
 ~CR3W
