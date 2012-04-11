@@ -1,5 +1,13 @@
 Repository for SJSU CS 151 Rock Paper Scissors assignment.
+=====================================================
+Changes: 4/10/2012
+-User is no longer explicitly asked for input
+-User must now input match length and throw generator type as a command line argument
 
+NOTE: Command line args are int,char
+int- matchlength char - ThrowGenerator type ('R' Random|'S' Smart)
+
+NOTE: Changes were minimal and limited to the RockPaperScissorsGame class, therefore javadocs were not updated. Javadocs will be updated when there are more significant changes.
 =====================================================
 Changes: 4/1/2012
 -Moved custom exceptions into an Exceptions package

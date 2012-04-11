@@ -13,102 +13,26 @@ import rockpaperscissors.ThrowGenerators.*;
  */
 public class RockPaperScissorsGame 
 {
-	Match match;
-    Input input;
-    Score score;
-    ThrowRecorder recorder;
-    InputAnalyzer analyzer;
+	Match match;//Handles match information
+    Input input;//Handles inputs and filters out bad input
+    Score score;//Handles score information
+    ThrowRecorder recorder;//Records throws made by the user and computer
+    InputAnalyzer analyzer;//Analyzes input and determines what to do with it
     
     /**
-     * Standard constructor used to build RockPaperScissorGame object
+     * Constructs RockPaperScissorsGame
+     * @param matchLength length of the match
+     * @param throwGeneratorType ('S' or 'R') Type of A.I. used by the computer
+     * to generate throws (Smart or Random)
      */
-    public RockPaperScissorsGame()
+    public RockPaperScissorsGame(int matchLength, char throwGeneratorType)
     {
         input = new Input();
         score = new Score();
         recorder = new ThrowRecorder();
         analyzer = new InputAnalyzer(this);
+        runGame(matchLength, throwGeneratorType);
     }
-    
-    /**
-     * Starts a match of the given length. Old method, kept for reference
-     * @param matchLength desired length of the match
-     * @deprecated use startMatch(int matchLength, ThrowGenerator generator)
-     */
-    public void startMatch(int matchLength)
-    {
-        //Basic set up for the match
-        char result = ' ';
-        int userSelection = 0;
-        int computerSelection = 0;
-        //String rawInput = null;
-        match.setMatch(matchLength);
-        
-        System.out.println("Note: Commands (Excluding Quit) may still be executed while in match mode.");
-        
-        while(match.isNotOver())
-        {
-            //Takes in initial input
-            System.out.println("Enter throw: ");
-//            rawInput = input.getInput();
-            
-            //Determines what to do with input
-            //userSelection = analyzer.determineThrow(rawInput);
-            
-            //If command input/invalid input
-//            if(userSelection == InputAnalyzer.FAILURE_CODE)
-//            { 
-//                System.out.println("Invalid Command. For help type 'F' or 'H'");
-//                match.invalidateRound();
-//                continue;
-//            }
-//            else if(userSelection == InputAnalyzer.SUCCESS_CODE)
-//            { match.invalidateRound();continue;}
-            
-            //Gets computers throw selection
-            //computerSelection = computer.generateThrow();
-            
-            
-//            //Records computer's throw
-//            if(Match.ROCK == computerSelection)
-//                recorder.recordThrow('R'); 
-//            else if(Match.PAPER == computerSelection)
-//                recorder.recordThrow('P');
-//            else if(Match.SCISSORS == computerSelection)
-//                recorder.recordThrow('S');
-//            
-//            //Records player's throw
-//            if(Match.ROCK == userSelection)
-//                recorder.recordThrow('R'); 
-//            else if(Match.PAPER == userSelection)
-//                recorder.recordThrow('P');
-//            else if(Match.SCISSORS == userSelection)
-//                recorder.recordThrow('S');
-            
-            
-            
-            
-            //If input is a valid throw
-            result = match.compare(userSelection, computerSelection);
-            switch(result)
-            {
-                case('W'):                    
-                    System.out.printf("You beat the computer! :)\n");
-                    score.increasePlayerScore();
-                    break;
-                case('L'):
-                    System.out.printf("You lost to the computer :(\n");
-                    score.increaseComputerScore();
-                    break;
-                case('T'):
-                    System.out.printf("You tied the computer :|\n");
-                    score.increaseTieScore();
-                    break;
-                default:break;
-            }
-        }
-        match.resetMatch();
-    }    
     
     /**
      * Starts a match of the given length using the specified Throw Generator
@@ -137,24 +61,20 @@ public class RockPaperScissorsGame
         	{
         		//Gets throw/command from user
 				rawInput = input.getInput();
+        		//Determines the users throw
+        		userSelection = analyzer.determineThrow(rawInput);
 			} 
         	catch (InvalidInputException e) 
         	{
         		//Invalid input, re-prompts user form throw/command
-        		System.out.println("Invalid input. Please re-enter.");
+        		System.out.println("Invalid input. Please re-enter:");
         		match.invalidateRound();
         		continue;
 			}
-        	
-        	try
-        	{
-        		//Determines the users throw
-        		userSelection = analyzer.determineThrow(rawInput);
-        	}
         	catch(InvalidCommandException e)
         	{
         		//Invalid command/throw entered.
-        		System.out.println("No such command. Please re-enter.");
+        		System.out.println("No such command. Please re-enter:");
         		match.invalidateRound();
         		continue;
         	}
@@ -203,58 +123,15 @@ public class RockPaperScissorsGame
     
     /**
      * Method used to run the Rock Paper Scissors game.
+     * @param matchLength length of each match
+     * @param throwType type of Throw Generator ('S' Smart|'R' Random)
      */
-    public void runGame()
-    {
-        ThrowGenerator throwGenerator = null;
-        String rawInput = null;//Used to get user input
-        int matchLength = 0;//Used to keep track of desired match length
-        
-        System.out.print("Enter the match length: ");
-        /*Gets match length from the user*/
-        while(true)
-        {
-            try
-            {
-            	rawInput = input.getInput();
-                matchLength = Integer.parseInt(rawInput);
-                break;
-            }
-            catch(NumberFormatException e)
-            {
-                System.out.print("Invalid integer. Please re-enter: ");
-                continue;
-            }
-            catch(InvalidInputException e)
-            {
-            	System.out.print("Invalid input. Please re-enter: ");
-            	continue;
-            }
-        }
-        
-        System.out.println("Select the type of A.I.");
-        System.out.print("(S) Smart (R) Random:");
-        /*Gets type of generator from user (Random or Smart)*/
-        while(true)
-        {
-        	try
-        	{
-        		rawInput = input.getInput();
-        		if( !(rawInput.equals("S") || rawInput.equals("R")) )
-        		{
-        			System.out.print("Only enter 'S' (Smart) or 'R' (Random):");
-        			continue;
-        		} 
-        		break;
-        	}
-        	catch(InvalidInputException e)
-        	{
-        		System.out.println("Invalid input. Please re-enter: ");
-            	continue;
-        	}
-        }
-        
-        switch(rawInput.charAt(0))
+    public void runGame(int matchLength, char throwType)
+    {   
+    	ThrowGenerator throwGenerator = null;
+    	
+    	//Determines which A.I. to use
+        switch(throwType)
         {
             case'S':
             	System.out.println("Game mode SMART selected");
@@ -264,6 +141,11 @@ public class RockPaperScissorsGame
             	System.out.println("Game mode RANDOM selected");
             	throwGenerator = new RandomThrow();
             	break;
+            default:
+            	System.out.println("Bad command line parameter given" 
+            			        + "SMART selected by default");           	
+            	throwGenerator = new SmartThrow(recorder);
+            	break;
         }
         
         startMatch(matchLength, throwGenerator);
@@ -272,46 +154,9 @@ public class RockPaperScissorsGame
     
     public static void main(String[] args)
     {
-        RockPaperScissorsGame rpsGame = new RockPaperScissorsGame();
-        rpsGame.runGame();
+    	int matchLength = Integer.parseInt(args[0]);//Gets match length
+    	char throwType = args[1].toUpperCase().charAt(0);//Gets throw type
+        RockPaperScissorsGame rpsGame = new RockPaperScissorsGame(matchLength, throwType);
+
     }
 }
-
-    /*
-     * Deprecated run game, new version now prompts for match length and 
-     * type of throw generator at the beginning. 
-     * Old method kept here for reference
-     */
-//    /**
-//     * Main method or run game 
-//     */
-//    public void runGame()
-//    {
-//        String rawInput = null;
-//        int code = 0;
-//        
-//        while(userIsPlaying)
-//        {
-//            //Prompts user for initial command
-//            System.out.println("Enter command: ");
-//            rawInput = input.getInput();
-//            
-//            //Checks to see if input is valid
-//            if(rawInput == null)
-//            {
-//                //If invalid print error message and continue for new input
-//                System.out.println("Invalid characters."); continue;
-//            }
-//            
-//            //If valid input determine action and see if input was a valid command
-//            code = analyzer.determineAction(rawInput);
-//            
-//            if(code == InputAnalyzer.FAILURE_CODE)
-//            {
-//                //If invalid command print error message and continue for new input
-//                System.out.println("Invalid command. For help type 'H' or 'F'"); continue;
-//            }
-//        }
-//        System.out.println("Have a nice day! Come back when you have more time!");
-//        System.out.println("Here's an ASCII dance to enjoy! <(0_0<) (^0_0^) (>0_0)>");
-//    }
