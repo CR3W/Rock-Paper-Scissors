@@ -1,5 +1,12 @@
 Repository for SJSU CS 151 Rock Paper Scissors assignment.
 =====================================================
+Changes: 4/20/2012
+-GUI is now implemented
+-Command line/terminal game play has been removed
+-All javadocs have been updated
+
+Refer to Javadocs for additional information
+=====================================================
 Changes: 4/10/2012
 -User is no longer explicitly asked for input
 -User must now input match length and throw generator type as a command line argument

@@ -3,6 +3,7 @@ package rockpaperscissors.ThrowGenerators;
 import java.util.Random;
 
 import rockpaperscissors.Match;
+import rockpaperscissors.ThrowConverter;
 
 /**
  * Throw generator that implements no special algorithm and
@@ -13,6 +14,8 @@ import rockpaperscissors.Match;
 public class RandomThrow implements ThrowGenerator
 {
     private Random random;//random object used to generate throws
+    private char predictedThrow;//Player's predicted throw
+    private int computersThrow;//Throw computer will make
     
     /**
      * Constructs a new RandomThrow object.
@@ -28,6 +31,33 @@ public class RandomThrow implements ThrowGenerator
     @Override
     public int generateThrow() 
     {
-        return random.nextInt(Match.throwChoices.length());
+        predictedThrow = ThrowConverter.convertToChar(random.nextInt(Match.throwChoices.length()));
+        switch(predictedThrow)
+        {
+            case 'R': computersThrow = Match.PAPER;break;
+            case 'P': computersThrow = Match.SCISSORS;break;
+            case 'S': computersThrow = Match.ROCK;break;
+        }
+        return computersThrow;
+    }
+    
+    /**
+     * Gets the computers generated throw
+     * @return String Computers throw
+     */
+    @Override
+    public String getComputersThrow()
+    {
+        return ThrowConverter.convertToString(computersThrow);
+    }
+    
+    /**
+     * Gets the predicted throw
+     * @return Player's predicted throw
+     */
+    @Override
+    public String getPredictedThrow()
+    {
+        return ThrowConverter.convertToString(predictedThrow);
     }
 }

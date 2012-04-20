@@ -8,9 +8,21 @@ package rockpaperscissors.ThrowGenerators;
  */
 public interface ThrowGenerator 
 {
-	/**
-	 * Generates a throw of Rock, Paper or Scissor.
-	 * @return Throw Constant representing the computer's throw.
-	 */
+   /**
+    * Generates a throw of Rock, Paper or Scissor.
+    * @return Throw Constant representing the computer's throw.
+    */
     public int generateThrow();
+    
+    /**
+     * Gets the throw the computer will make
+     * @return String computer's throw
+     */
+    public String getComputersThrow();
+    
+    /**
+     * Gets the throw the computer predicts the human will make
+     * @return String player's predicted throw
+     */
+    public String getPredictedThrow();    
 }

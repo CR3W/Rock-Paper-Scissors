@@ -1,16 +1,16 @@
 package rockpaperscissors;
 
 /**
- * Contains help and general information about the rock paper scissors game
- * @author CR3W
- * @version Object-Oriented Design (CS 151)
- */
-public class Features 
+* Contains help and general information about the rock paper scissors game
+* @author CR3W
+* @version Object-Oriented Design (CS 151)
+*/
+public class Features
 {
     /**
-     * Contains information about the Rock Paper Scissors game
-     * @return String containing game information
-     */
+* Contains information about the Rock Paper Scissors game
+* @return String containing game information
+*/
     public static String getFeaturesInformation()
     {
         return "Welcome to the Rock Paper Scissors Game!\n"

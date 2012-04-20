@@ -6,6 +6,7 @@ import java.util.Random;
 import rockpaperscissors.Match;
 import rockpaperscissors.ThrowRecorder;
 import rockpaperscissors.Exceptions.NotEnoughDataException;
+import rockpaperscissors.ThrowConverter;
 
 /**
  * Throw generator that analyzes throw sequences between length
@@ -17,6 +18,8 @@ import rockpaperscissors.Exceptions.NotEnoughDataException;
 public class SmartThrow implements ThrowGenerator
 {
     private ThrowRecorder recorder;//Contains users throw history
+    private char predictedThrow;
+    private int computersThrow;
     
     /**
      * Constructs a new SmartThrow object with the specified recorder
@@ -38,7 +41,7 @@ public class SmartThrow implements ThrowGenerator
     {
         //If there is enough data it will begin analysis here
         
-        char predictedThrow = 'R';//Sets the default thorw to ROCK
+        predictedThrow = 'R';//Sets the default thorw to ROCK
         int greatestValue = 0;//Keeps track of sequence with highest frequency
         String currentSequence = ""; //Stores current sequence being analyzed
         String originalSequence = "";//Stores the original sequence to be reused
@@ -54,7 +57,14 @@ public class SmartThrow implements ThrowGenerator
         {
             //Exception thrown if it is too early for computer to make a 
             //proper prediction, instead a random throw is generated.
-            return new Random().nextInt(3);
+            predictedThrow = ThrowConverter.convertToChar(new Random().nextInt(3));
+            switch(predictedThrow)
+            {
+                case 'R': computersThrow = Match.PAPER;break;
+                case 'P': computersThrow = Match.SCISSORS;break;
+                case 'S': computersThrow = Match.ROCK;break;
+            }
+            return computersThrow;
         }
         
         //If enough throws have been made sequence analysis beings
@@ -86,11 +96,31 @@ public class SmartThrow implements ThrowGenerator
         //a random throw is made by default.
         switch(predictedThrow)
         {
-            case 'R': return Match.PAPER;
-            case 'P': return Match.SCISSORS;
-            case 'S': return Match.ROCK;
-            default: return new Random().nextInt(Match.throwChoices.length());
+            case 'R': computersThrow = Match.PAPER;break;
+            case 'P': computersThrow = Match.SCISSORS;break;
+            case 'S': computersThrow = Match.ROCK;break;
         }
+        
+        return computersThrow;
     }
     
+    /**
+     * Gets the computers generated throw
+     * @return String Computers throw
+     */
+    @Override
+    public String getComputersThrow()
+    {
+       return ThrowConverter.convertToString(computersThrow);
+    }
+    
+    /**
+     * Gets the predicted throw
+     * @return Player's predicted throw
+     */
+    @Override
+    public String getPredictedThrow()
+    {
+        return ThrowConverter.convertToString(predictedThrow);
+    }
 }
